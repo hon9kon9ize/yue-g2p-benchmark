@@ -1,2 +1,3 @@
 *.ipynb
 data/*_bak
+__pycache__
