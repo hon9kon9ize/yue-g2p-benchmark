@@ -11,9 +11,32 @@ The benchmark uses the following metrics:
 - **Accuracy**: The percentage of words that are correctly converted the specified character from graphemes to phonemes.
 - **Levenshtein Distance**: The average Levenshtein distance between the predicted phonemes and the ground truth phonemes.
 
+## Usage
+
+### Pre-requisites
+
+```bash
+# pull submodules
+git submodule update --init --recursive
+# install dependencies
+pip install -r requirements.txt
+# install g2pW-Cantonese dependencies
+pip install -r g2pW-Cantonese/requirements.txt
+```
+
+### Run the Benchmark
+
+```bash
+python run.py
+```
+
 ## Leaderboard
 
 ![Leaderboard](result.png)
+
+## Runtime Comparison
+
+![runtime](runtime.png)
 
 ## How to Submit
 
