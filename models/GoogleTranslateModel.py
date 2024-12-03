@@ -39,7 +39,7 @@ class GoogleTranslateModel(G2PModel):
             proxies=self.proxies,
             timeout=10,
         )
-
+        print(response.text)
         try:
             jyutping = json.loads(json.loads(response.text.split("\n")[2])[0][2])[0][0]
 
