@@ -3,6 +3,7 @@ from models import (
     ToJyutpingModel,
     CantoneseG2PWModel,
     GoogleTranslateModel,
+    FunAudioModel,
 )
 import time
 from data import prepare_data, calculate_accuracy
@@ -20,8 +21,9 @@ if __name__ == "__main__":
     model_classes = [
         PyCantoneseModel,
         ToJyutpingModel,
-        GoogleTranslateModel,
         CantoneseG2PWModel,
+        FunAudioModel,
+        GoogleTranslateModel,
     ]
     model_names = []
 
@@ -45,6 +47,7 @@ if __name__ == "__main__":
 
         print(f"Accuracy: {acc:.4f}")
         print(f"Levenshtein Distance: {distance:.4f}")
+        print(f"Runtime: {runtime:.4f}s")
 
         model_names.append(model_name)
         results[model_name] = {
@@ -67,14 +70,14 @@ if __name__ == "__main__":
     # Plot the results
     plt.figure(figsize=(14, 8))
     x = range(len(model_names))
-    plt.bar(
+    accuracy_bars = plt.bar(
         x,
         [results[model_name]["accuracy"] for model_name in model_names],
         width,
         label="Accuracy",
         color=colors[0],
     )
-    plt.bar(
+    distance_bars = plt.bar(
         [i + width for i in x],
         [results[model_name]["distance"] for model_name in model_names],
         width,
@@ -86,12 +89,33 @@ if __name__ == "__main__":
     plt.ylabel("Scores")
     plt.title("G2P Model Performance")
     plt.legend()
+
+    # Add text labels on the bars
+    for bar in accuracy_bars:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            yval,
+            f"{yval:.4f}",
+            ha="center",
+            va="bottom",
+        )
+    for bar in distance_bars:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            yval,
+            f"{yval:.4f}",
+            ha="center",
+            va="bottom",
+        )
+
     # save to result.png
     plt.savefig("result.png")
 
     # Plot the runtime
     plt.figure(figsize=(14, 8))
-    plt.bar(
+    runtime_bars = plt.bar(
         model_names,
         [results[model_name]["runtime"] for model_name in model_names],
         width,
@@ -102,5 +126,17 @@ if __name__ == "__main__":
     plt.ylabel("Runtime (s)")
     plt.title("G2P Model Runtime")
     plt.legend()
+
+    # Add text labels on the bars
+    for bar in runtime_bars:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width() / 2,
+            yval,
+            f"{yval:.4f}",
+            ha="center",
+            va="bottom",
+        )
+
     # save to runtime.png
     plt.savefig("runtime.png")

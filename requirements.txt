@@ -2,3 +2,4 @@ ToJypting
 pycantonese
 levenshtein
 huggingface_hub
+modelscope

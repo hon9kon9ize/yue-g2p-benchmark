@@ -18,8 +18,7 @@ class CantoneseG2PWModel(G2PModel):
         self,
         g2pw_repo_id: str = "Naozumi0512/g2pW-Cantonese",
         bert_repo_id: str = "hon9kon9ize/bert-large-cantonese",
-        batch_size=None,
-        num_workers=8,
+        num_workers=None,
     ):
         # check if weights file exists
         if not os.path.exists("g2pW-Cantonese/checkpoints/g2pW-Cantonese"):
@@ -39,18 +38,18 @@ class CantoneseG2PWModel(G2PModel):
         self.model = G2PWConverter(
             model_dir="g2pW-Cantonese/checkpoints/g2pW-Cantonese",
             model_source="g2pW-Cantonese/checkpoints/bert-large-cantonese",
-            batch_size=batch_size,
             num_workers=num_workers,
+            use_cuda=True,
         )
 
     def get_name(self) -> str:
         return "g2pW-Cantonese"
 
     def _predict(self, texts: List[str]) -> List[str]:
-        preds = self.model(texts)
-        results = []
 
-        for pred in preds:
-            results.append(" ".join([t for t in pred if t is not None]))
+        results = []
+        for text in texts:
+            pred = self.model(text)
+            results.append(" ".join([t for t in pred[0] if t is not None]))
 
         return results

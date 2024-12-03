@@ -1,3 +1,4 @@
 [submodule "g2pW-Cantonese"]
 	path = g2pW-Cantonese
 	url = https://github.com/Naozumi520/g2pW-Cantonese.git
+	branch = 20241029-bert-large

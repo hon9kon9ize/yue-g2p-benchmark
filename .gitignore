@@ -1,3 +1,4 @@
 *.ipynb
 data/*_bak
 __pycache__
+pretrained_models/*
