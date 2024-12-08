@@ -33,11 +33,7 @@ class G2PModel:
         cleaned_jyutpings = []
 
         for jyutping in jyutpings:
-            lines = []
-            for syllable in jyutping.split(" "):
-                if re.match(r"[a-z]+[1-6]", syllable):
-                    lines.append(syllable)
-            cleaned_jyutpings.append(" ".join(lines))
+            cleaned_jyutpings.append(" ".join(re.findall(r"[a-z]+[1-6]", jyutping)))
 
         return cleaned_jyutpings
 
