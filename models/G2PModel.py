@@ -25,10 +25,10 @@ class G2PModel:
         any syllables that do not match this pattern.
 
         Args:
-            jyutpings (List[str]): A list of Jyutping strings to be cleaned.
+            jyutpings (List[Union[str, None]]): A list of Jyutping strings to be cleaned.
 
         Returns:
-            List[str]: A list of cleaned Jyutping strings with only valid Jyutping syllables.
+            List[Union[str, None]]: A list of cleaned Jyutping strings with only valid Jyutping syllables.
         """
         return [jyutping if jyutping and re.fullmatch(r"[a-z]+[1-6]", jyutping) else None for jyutping in jyutpings]
 
