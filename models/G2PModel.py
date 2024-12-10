@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 import re
 
 
@@ -10,13 +10,13 @@ class G2PModel:
     phonemes from text and cleaning Jyutping strings.
     """
 
-    def _predict(self, texts: List[str]) -> List[str]:
+    def _predict(self, texts: List[str]) -> List[List[Union[str, None]]]:
         raise NotImplementedError
 
     def get_name(self) -> str:
         raise NotImplementedError
 
-    def _clean_jyutpings(self, jyutpings: List[str]) -> List[str]:
+    def _clean_jyutpings(self, jyutpings: List[Union[str, None]]) -> List[Union[str, None]]:
         """
         Cleans up a list of Jyutping strings by removing any non-Jyutping text.
 
@@ -25,19 +25,12 @@ class G2PModel:
         any syllables that do not match this pattern.
 
         Args:
-            jyutpings (List[str]): A list of Jyutping strings to be cleaned.
+            jyutpings (List[Union[str, None]]): A list of Jyutping strings to be cleaned.
 
         Returns:
-            List[str]: A list of cleaned Jyutping strings with only valid Jyutping syllables.
+            List[Union[str, None]]: A list of cleaned Jyutping strings with only valid Jyutping syllables.
         """
-        cleaned_jyutpings = []
+        return [jyutping if jyutping and re.fullmatch(r"[a-z]+[1-6]", jyutping) else None for jyutping in jyutpings]
 
-        for jyutping in jyutpings:
-            cleaned_jyutpings.append(" ".join(re.findall(r"[a-z]+[1-6]", jyutping)))
-
-        return cleaned_jyutpings
-
-    def __call__(self, texts: List[str]) -> List[str]:
-        results = self._predict(texts)
-
-        return self._clean_jyutpings(results)
+    def __call__(self, texts: List[str]) -> List[List[Union[str, None]]]:
+        return [self._clean_jyutpings(result) for result in self._predict(texts)]

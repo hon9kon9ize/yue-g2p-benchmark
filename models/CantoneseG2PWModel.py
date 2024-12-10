@@ -1,6 +1,6 @@
 import sys
 import os
-from typing import List
+from typing import List, Union
 
 sys.path.append("g2pW-Cantonese")
 
@@ -45,11 +45,5 @@ class CantoneseG2PWModel(G2PModel):
     def get_name(self) -> str:
         return "g2pW-Cantonese"
 
-    def _predict(self, texts: List[str]) -> List[str]:
-
-        results = []
-        for text in texts:
-            pred = self.model(text)
-            results.append(" ".join([t for t in pred[0] if t is not None]))
-
-        return results
+    def _predict(self, texts: List[str]) -> List[List[Union[str, None]]]:
+        return self.model(texts)
