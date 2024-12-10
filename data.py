@@ -47,14 +47,13 @@ def calculate_accuracy(
     correct_predictions = 0
     leven_distance = 0
 
-    for i, (text, query_id, phoneme, pred) in enumerate(
-        zip(test_texts, test_query_ids, ground_truths, predictions)
+    for text, query_id, true_phoneme, pred_phonemes in zip(
+        test_texts, test_query_ids, ground_truths, predictions
     ):
-        pred_phonemes = pred.split(" ")
-
         if len(pred_phonemes) > query_id:
-            leven_distance += 1 - ratio(phoneme, pred_phonemes[query_id])
-            if pred_phonemes[query_id] == phoneme:
+            predicted_phoneme = pred_phonemes[query_id]
+            leven_distance += 1 - ratio(true_phoneme, predicted_phoneme) if predicted_phoneme else 1
+            if pred_phonemes[query_id] == true_phoneme:
                 correct_predictions += 1
 
     accuracy = correct_predictions / total_predictions
@@ -79,16 +78,13 @@ def calculate_per(
     total_phonemes = 0
     total_errors = 0
 
-    for text, query_id, true_phoneme, pred in zip(
+    for text, query_id, true_phoneme, pred_phonemes in zip(
         test_texts, test_query_ids, ground_truths, predictions
     ):
-        pred_phonemes = pred.split(" ")
         if len(pred_phonemes) > query_id:
             predicted_phoneme = pred_phonemes[query_id]
             total_phonemes += len(true_phoneme)
-            total_errors += distance(
-                true_phoneme, predicted_phoneme
-            )  # Raw edit distance
+            total_errors += distance(true_phoneme, predicted_phoneme) if predicted_phoneme else len(true_phoneme)
 
     return total_errors / total_phonemes if total_phonemes > 0 else 0
 

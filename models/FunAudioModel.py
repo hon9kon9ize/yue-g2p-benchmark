@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import List, Union
 import logging
 from modelscope import snapshot_download
 from models import G2PModel
@@ -39,37 +39,36 @@ class FunAudioModel(G2PModel):
     def get_name(self) -> str:
         return "FunAudio"
 
-    def _predict(self, texts: List[str]) -> List[str]:
+    def _predict(self, texts: List[str]) -> List[List[Union[str, None]]]:
         predictions = []
 
         for text in texts:
             try:
-                model_output = (
-                    self.model.gen_tacotron_symbols(text).strip().split("\t")[1]
+                model_output = self.model.gen_tacotron_symbols(text)
+                phonemes = (
+                    phoneme.replace("{", "").replace("}", "").split("$")
+                    for sentence in model_output.strip().split("\n")
+                    for phoneme in sentence.split("\t")[1].strip().split(" ")
                 )
-                syllables = [
-                    s.replace("{", "").replace("}", "").split("$")
-                    for s in model_output.split(" ")
-                ]
-                pred = ""
+                pred = []
+                curr_syllable = ""
 
-                while True:
-                    try:
-                        s = syllables.pop(0)
-                        syllable = s[0].split("_")[0]
+                for s in phonemes:
+                    if s[0].startswith("#") and s[0] != "#1":
+                        pred.append(None)
+                        continue
+
+                    syllable = s[0].split("_")[0]
+                    if s[2] == "s_end":
                         tone = s[1][-1]
-                        if s[2] == "s_end":
-                            pred += syllable + tone + " "
-                        elif s[2] != "s_none":
-                            pred += syllable
-
-                    except IndexError:
-                        break
+                        pred.append(curr_syllable + syllable + tone)
+                        curr_syllable = ""
+                    elif s[2] != "s_none":
+                        curr_syllable += syllable
 
                 predictions.append(pred)
             except Exception as e:
                 logger.error(f"Error: {e}")
-                predictions.append("")
-                continue
+                predictions.append([])
 
         return predictions

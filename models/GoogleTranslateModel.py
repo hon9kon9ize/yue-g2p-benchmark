@@ -1,6 +1,6 @@
 import re
 import json
-from typing import Dict, List
+from typing import Dict, List, Union
 from models.G2PModel import G2PModel
 from tqdm.auto import tqdm
 import requests
@@ -14,7 +14,7 @@ class GoogleTranslateModel(G2PModel):
     def __init__(self, proxies: Dict = None):
         self.proxies = proxies
 
-    def _translate(self, text: str) -> str:
+    def _translate(self, text: str) -> List[str]:
         url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute"
         headers = {
             "accept": "*/*",
@@ -42,20 +42,11 @@ class GoogleTranslateModel(G2PModel):
         print(response.text)
         try:
             jyutping = json.loads(json.loads(response.text.split("\n")[2])[0][2])[0][0]
-
-            if jyutping is None:
-                return ""
-
-            pred = " ".join(
-                [k for j in jyutping.split(" ") for k in re.split(r"([a-z]+[1-6])", j)]
-            )
-            pred = re.sub(r"\s+", " ", pred)
-
-            return pred
+            return re.findall(r"[a-z]+[1-6]|\S", jyutping) if jyutping is not None else []
         except json.JSONDecodeError:
-            return ""
+            return []
 
-    def _predict(self, texts: List[str]) -> List[str]:
+    def _predict(self, texts: List[str]) -> List[List[Union[str, None]]]:
         results = []
 
         for text in tqdm(texts):
