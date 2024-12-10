@@ -20,6 +20,7 @@ if __name__ == "__main__":
         PyCantoneseModel,
         ToJyutpingModel,
         CantoneseG2PWModel,
+        # FunAudioModel,
     ]
     model_names = []
 
