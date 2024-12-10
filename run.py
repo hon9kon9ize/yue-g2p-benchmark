@@ -6,7 +6,7 @@ from models import (
     # FunAudioModel,
 )
 import time
-from data import prepare_data, calculate_accuracy, calculate_per
+from data import prepare_data, calculate_accuracy
 import matplotlib.pyplot as plt
 import argparse
 
@@ -52,22 +52,17 @@ if __name__ == "__main__":
         predictions = model(test_texts)
         runtime = time.time() - start_time
 
-        acc, distance = calculate_accuracy(
-            predictions, test_texts, test_query_ids, test_phonemes, test_pos
-        )
-        per = calculate_per(
+        acc, per = calculate_accuracy(
             predictions, test_texts, test_query_ids, test_phonemes, test_pos
         )
 
         print(f"Accuracy: {acc:.4f}")
-        print(f"Levenshtein Distance: {distance:.4f}")
         print(f"Phoneme Error Rate (PER): {per:.4f}")
         print(f"Runtime: {runtime:.4f}s")
 
         model_names.append(model_name)
         results[model_name] = {
             "accuracy": acc,
-            "distance": distance,
             "per": per,
             "runtime": runtime,
         }
