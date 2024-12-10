@@ -1,16 +1,11 @@
 from Levenshtein import ratio, distance
 from models import G2PModel
-import re
 
 ANCHOR_CHAR = "▁"
 
-# https://ayaka.shn.hk/hanregex/
-chinese_character_regex = re.compile(r'[\u4e00-\u9fff\u3400-\u4dbf\U00020000-\U0002a6df\U0002a700-\U0002ebef\U00030000-\U000323af\ufa0e\ufa0f\ufa11\ufa13\ufa14\ufa1f\ufa21\ufa23\ufa24\ufa27\ufa28\ufa29\u3006\u3007][\ufe00-\ufe0f\U000e0100-\U000e01ef]?')
 
 def prepare_data(sent_path, lb_path=None, pos_path=None, max_samples=None):
     raw_texts = open(sent_path, encoding="utf-8").read().rstrip().split("\n")
-    # Filter out non-Chinese characters like punctuations because they don't have associated pronunciations
-    raw_texts = [''.join(char for char in text if chinese_character_regex.match(char) or char == ANCHOR_CHAR) for text in raw_texts]
     query_ids = [raw.index(ANCHOR_CHAR) for raw in raw_texts]
     texts = [raw.replace(ANCHOR_CHAR, "") for raw in raw_texts]
     if lb_path is None:
