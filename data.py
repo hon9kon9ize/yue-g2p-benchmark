@@ -64,8 +64,6 @@ def calculate_accuracy(
 ):
     """
     Calculates the accuracy and Phoneme Error Rate (PER) for monosyllabic predictions.
-    The Levenshtein distance is always equivalent to the Phoneme Error Rate (PER)
-    since the number of phonemes of a Cantonese syllable must be 4.
 
     Args:
       predictions: A list of predicted phonemes.
@@ -77,7 +75,7 @@ def calculate_accuracy(
     """
     total_predictions = 0
     correct_predictions = 0
-    leven_distance = 0
+    total_errors = 0
 
     for text, query_id, true_phonemes, pred_jyutpings in zip(
         test_texts, test_query_ids, ground_truths, predictions
@@ -86,17 +84,17 @@ def calculate_accuracy(
             total_predictions += 1
             predicted_jyutping = pred_jyutpings[query_id]
             if predicted_jyutping is None:
-                leven_distance += 1
+                total_errors += PHONEMES_PER_SYLLABLE
             else:
                 predicted_phonemes = jyutping_to_phonemes(predicted_jyutping)
                 if predicted_phonemes == true_phonemes:
                     correct_predictions += 1
                 for i in range(PHONEMES_PER_SYLLABLE):
                     if predicted_phonemes[i] != true_phonemes[i]:
-                        leven_distance += 1 / PHONEMES_PER_SYLLABLE
+                        total_errors += 1
 
     acc = correct_predictions / total_predictions
-    per = leven_distance / total_predictions
+    per = total_errors / total_predictions / PHONEMES_PER_SYLLABLE
 
     return acc, per
 
