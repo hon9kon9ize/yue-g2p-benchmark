@@ -9,7 +9,6 @@ The dataset includes character pairs along with their corresponding ground truth
 The benchmark uses the following metrics:
 
 - **Accuracy**: The percentage of words that are correctly converted the specified character from graphemes to phonemes.
-- **Levenshtein Distance**: The average Levenshtein distance between the predicted phonemes and the ground truth phonemes.
 - **Phoneme Error Rate (PER)**: The percentage of phonemes that are incorrectly predicted.
 
 ## Usage

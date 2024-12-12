@@ -1,5 +1,4 @@
 ToJyutping
 pycantonese
-levenshtein
 huggingface_hub
 modelscope
