@@ -6,11 +6,39 @@ The dataset includes character pairs along with their corresponding ground truth
 
 ## Metrics
 
-The benchmark uses the following metrics:
+The benchmark evaluates Cantonese G2P systems using two primary metrics:
 
-- **Accuracy**: The percentage of words that are correctly converted the specified character from graphemes to phonemes.
-- **Levenshtein Distance**: The average Levenshtein distance between the predicted phonemes and the ground truth phonemes.
-- **Phoneme Error Rate (PER)**: The percentage of phonemes that are incorrectly predicted.
+### Accuracy
+
+- **Definition**: The percentage of instances where the specified character within a word is correctly converted from graphemes to phonemes.
+- **Purpose**: This metric measures how often the G2P model accurately predicts the phoneme for the target character in the context of the word.
+
+### Phoneme Error Rate (PER)
+
+- **Definition**: The proportion of phoneme components that are incorrectly predicted.
+- **Calculation Details**:
+  - **Syllable Decomposition**: Each Jyutping syllable is broken down into four components: **onset**, **nucleus**, **coda**, and **tone**.
+  - **Hamming Distance**: PER is calculated by computing the Hamming distance between the predicted and ground truth quadruples (onset, nucleus, coda, tone).
+    - For example, if the ground truth is `(s, a, i, 2)` and the prediction is `(s, a, m, 2)`, the Hamming distance is 1 (since only the coda differs).
+  - **Multiple Labels Handling**: If multiple valid pronunciations (alternative labels) exist for a character, the PER is computed using the label that minimizes the Hamming distance to the prediction.
+- **Purpose**: PER provides a fine-grained evaluation by identifying specific phoneme components where errors occur, offering insights into the model's phonological performance.
+
+### Rationale for Metric Choices
+
+#### Exclusion of Levenshtein Distance
+
+Previously, the Levenshtein distance was considered for evaluating G2P performance but was found to be unsuitable for this benchmark due to:
+
+1. **Dependency on Romanization System**:
+   - The Levenshtein distance operates on the Jyutping romanization strings, which can bias the results based on spelling conventions rather than actual phonetic differences.
+   - Different romanization systems might represent the same sounds with different letters or letter combinations, affecting the distance calculation.
+
+2. **Positional Pronunciation Variations**:
+   - In Cantonese, certain letters represent sounds that change depending on their position within a syllable.
+     - **Example**: The letters **p**, **t**, and **k** are aspirated when they appear at the beginning (**onset**) of a syllable but are unreleased when they appear at the end (**coda**).
+   - Levenshtein distance does not account for these positional differences, potentially overestimating errors when letters are the same but their pronunciations differ due to their positions.
+
+By using **Accuracy** and **Phoneme Error Rate (PER)** based on phonetic components, the benchmark provides a more accurate and meaningful evaluation of G2P systems that reflects true phonological performance rather than orthographic or romanization discrepancies.
 
 ## Usage
 
