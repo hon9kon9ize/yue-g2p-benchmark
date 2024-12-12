@@ -82,20 +82,20 @@ if __name__ == "__main__":
     plt.figure(figsize=(14, 8))
     x = range(len(model_names))
     accuracy_bars = plt.bar(
-        x,
+        [i - width / 2 for i in x],
         [results[model_name]["accuracy"] for model_name in model_names],
         width,
         label="Accuracy",
         color=colors[0],
     )
     distance_bars = plt.bar(
-        [i + width for i in x],
+        [i + width / 2 for i in x],
         [results[model_name]["per"] for model_name in model_names],
         width,
         label="Phoneme Error Rate (PER)",
         color=colors[1],
     )
-    plt.xticks([i + width / 2 for i in x], model_names)
+    plt.xticks(x, model_names)
 
     plt.ylabel("Scores")
     plt.title("G2P Model Performance")
