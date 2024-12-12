@@ -2,20 +2,23 @@ import re
 from functools import reduce
 from models import G2PModel
 
+# The choice of symbols is arbitrary and does not affect the calculation and the final result.
+# As long as each symbol represents a unique phoneme in its position,
+# it is fine even if the same symbol represents different phonemes in different positions.
 JYUTPING_TO_PHONEME_RULES = {
     r"ng": "N",
-    r"g(w|(?=u(?!N|k)))": "G",
-    r"k(w|(?=u(?!N|k)))": "K",
+    r"g(w|(?=u(?!N|k)))": "G",  # replace onsets of syllables beginning with gw- or gu-, excluding gung and guk
+    r"k(w|(?=u(?!N|k)))": "K",  # replace onsets of syllables beginning with kw- or ku-, excluding kung and kuk
     r"aa": "A",
     r"oe": "O",
     r"eo": "E",
     r"yu": "Y",
-    r"e(?=i)|i(?=N|k)": "I",
-    r"o(?=u)|u(?=N|k)": "U",
-    r"^(?=[mN]\d)": "__",
-    r"(?<=^h)(?=[mN]\d)": "h_",
-    r"^(?=[aeiouAEIOUY])": "_",
-    r"(?<=^.[aeiouAEIOUY])(?![iumnNptk])": "_",
+    r"e(?=i)|i(?=N|k)": "I",    # replace nuclei of syllables ending with -ei, -ing or -ik
+    r"o(?=u)|u(?=N|k)": "U",    # replace nuclei of syllables ending with -ou, -ung or -uk
+    r"^(?=[mN]\d)": "__",       # add null onsets and nuclei to syllabic m and ng
+    r"(?<=^h)(?=[mN]\d)": "_",  # add null nuclei to syllabic hm and hng
+    r"^(?=[aeiouAEIOUY])": "_", # add null onsets
+    r"(?<=^.[aeiouAEIOUY])(?![iumnNptk])": "_",  # add null codas
 }
 
 PHONEMES_PER_SYLLABLE = 4
