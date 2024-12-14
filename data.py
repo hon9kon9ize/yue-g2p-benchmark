@@ -57,7 +57,7 @@ def prepare_data(sent_path, lb_path=None, pos_path=None, max_samples=None):
             jyutpings = jyutpings[:max_samples]
             pos_tags = pos_tags[:max_samples] if pos_tags else None
 
-        phonemes = [jyutping_to_phonemes(jyutping) for jyutping in jyutpings]
+        phonemes = [{jyutping_to_phonemes(jyutping) for jyutping in alternatives.split("/")} for alternatives in jyutpings]
 
         return texts, query_ids, phonemes, pos_tags
 
@@ -90,11 +90,17 @@ def calculate_accuracy(
                 total_errors += PHONEMES_PER_SYLLABLE
             else:
                 predicted_phonemes = jyutping_to_phonemes(predicted_jyutping)
-                if predicted_phonemes == true_phonemes:
+                if predicted_phonemes in true_phonemes:
                     correct_predictions += 1
-                for i in range(PHONEMES_PER_SYLLABLE):
-                    if predicted_phonemes[i] != true_phonemes[i]:
-                        total_errors += 1
+                min_distance = PHONEMES_PER_SYLLABLE
+                for alternative in true_phonemes:
+                    distance = 0
+                    for i in range(PHONEMES_PER_SYLLABLE):
+                        if predicted_phonemes[i] != alternative[i]:
+                            distance += 1
+                    if distance < min_distance:
+                        min_distance = distance
+                total_errors += min_distance
 
     acc = correct_predictions / total_predictions
     per = total_errors / total_predictions / PHONEMES_PER_SYLLABLE
