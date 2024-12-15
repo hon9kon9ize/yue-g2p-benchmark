@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class CantoneseG2PWModel(G2PModel):
     def __init__(
         self,
-        g2pw_repo_id: str = "Naozumi0512/g2pW-Cantonese",
+        g2pw_repo_id: str = "Naozumi0512/g2pW-canto-20241206-bert-base",
         bert_repo_id: str = "hon9kon9ize/bert-large-cantonese",
         num_workers=None,
     ):
