@@ -18,7 +18,7 @@ JYUTPING_TO_PHONEME_RULES = {
     r"^(?=[mN]\d)": "__",       # add null onsets and nuclei to syllabic m and ng
     r"(?<=^h)(?=[mN]\d)": "_",  # add null nuclei to syllabic hm and hng
     r"^(?=[aeiouAEIOUY])": "_", # add null onsets
-    r"(?<=^.[aeiouAEIOUY])(?![iumnNptk])": "_",  # add null codas
+    r"(?<=^..)(?=\d)": "_",     # add null codas
 }
 
 PHONEMES_PER_SYLLABLE = 4
