@@ -136,7 +136,6 @@ class G2pM(object):
         h = o * np.tanh(c)
 
         return (h, c)
-
     def fc_layer(self, inputs):
         # inputs : [b,t,d]
         hidden_l0 = np.matmul(
