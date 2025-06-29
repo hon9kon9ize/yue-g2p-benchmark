@@ -1,3 +1,6 @@
+
+⚠️ Warning: The model `Naozumi0512/g2pW-canto-20241206-bert-base` used in this benchmark has been reported to have a [backdoor threat](https://protectai.com/insights/models/Naozumi0512/g2pW-canto-20241206-bert-base/2f435334357487f85d05429e2da1d6da93aafd2f/files?utm_source=huggingface). This is due to an old version of ONNX conversion. We have reported this to the model's author, who is currently working on a fix. Please use it at your own risk.
+
 # Cantonese G2P Evaluation Benchmark
 
 This project is a benchmark for evaluating Cantonese Grapheme-to-Phoneme (G2P) systems. The benchmark is based on the [Jyutping Romanization System](https://en.wikipedia.org/wiki/Jyutping). The data is obtained from [word.hk](https://words.hk/), 100 samples from [Dufu-Analysis](https://github.com/wingmingchan64/Dufu-Analysis) and 500 colloquial Chinese transcribed from [CanCLID/zoengjyutgaai_saamgwokjinji](CanCLID/zoengjyutgaai_saamgwokjinji).
